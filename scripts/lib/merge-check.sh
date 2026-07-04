@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # Returns 0 if branch is merged, 1 if not.
-# Usage: is_merged <branch> [<base-branch>]
+# Usage: is_merged <branch> <repo-root> [<base-branch>]
 is_merged() {
   local branch="$1"
-  local base="${2:-main}"
+  local repo_root="$2"
+  local base="${3:-main}"
 
   if command -v gh &>/dev/null; then
     local state
-    state=$(gh pr view "$branch" --json state -q .state 2>/dev/null)
+    state=$(cd "$repo_root" && gh pr view "$branch" --json state -q .state 2>/dev/null)
     [[ "$state" == "MERGED" ]]
   else
     # Warn once per session that squash-merge detection is unavailable
@@ -17,6 +18,6 @@ is_merged() {
       tmux display-message "wtree: gh not found — using git branch --merged (squash-merges not detected)"
       tmux set-option -g @wtree_warned_no_gh "1"
     fi
-    git branch --merged "$base" 2>/dev/null | sed 's/^[* ]*//' | grep -qxF "$branch"
+    git -C "$repo_root" branch --merged "$base" 2>/dev/null | sed 's/^[* ]*//' | grep -qxF "$branch"
   fi
 }

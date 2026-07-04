@@ -7,8 +7,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/merge-check.sh
 source "$SCRIPT_DIR/lib/merge-check.sh"
 
-repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
-main_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null \
+pane_path="${1:-$PWD}"
+repo_root=$(git -C "$pane_path" rev-parse --show-toplevel 2>/dev/null)
+main_branch=$(git -C "$repo_root" symbolic-ref refs/remotes/origin/HEAD 2>/dev/null \
   | sed 's|refs/remotes/origin/||')
 [[ -z "$main_branch" ]] && main_branch="main"
 
@@ -21,7 +22,7 @@ pane_ids=()
 while IFS=' ' read -r pane_id slot branch; do
   [[ -z "$slot" || -z "$branch" ]] && continue
 
-  if is_merged "$branch" "$main_branch" 2>/dev/null; then
+  if is_merged "$branch" "$repo_root" "$main_branch" 2>/dev/null; then
     status="merged — pending cleanup"
   else
     status="active"

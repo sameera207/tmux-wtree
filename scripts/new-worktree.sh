@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Creates a git worktree and a tagged tmux pane for it in the 2-column grid.
-# Usage: new-worktree.sh <branch-name>
+# Usage: new-worktree.sh <branch-name> [pane-path]
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/grid.sh
@@ -12,14 +12,18 @@ if [[ -z "$branch" ]]; then
   exit 1
 fi
 
-# Run cleanup pass before adding new worktree.
-"$SCRIPT_DIR/clean.sh"
+# run-shell does not inherit the triggering pane's cwd, so the caller passes
+# it explicitly (expanded from #{pane_current_path} in the bound command).
+pane_path="${2:-$PWD}"
 
-repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
+repo_root=$(git -C "$pane_path" rev-parse --show-toplevel 2>/dev/null)
 if [[ -z "$repo_root" ]]; then
   tmux display-message "wtree: not inside a git repository"
   exit 1
 fi
+
+# Run cleanup pass before adding new worktree.
+"$SCRIPT_DIR/clean.sh" "$repo_root"
 
 repo_name=$(basename "$repo_root")
 safe_branch="${branch//\//-}"

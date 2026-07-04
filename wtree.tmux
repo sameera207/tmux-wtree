@@ -22,11 +22,17 @@ wtree_list_key=$(tmux show-option -gv @wtree-list-key 2>/dev/null)
 [[ -z "$wtree_list_key" ]] && wtree_list_key='L'
 
 # --- Register keybindings ----------------------------------------------------
+# Neither run-shell's -c nor display-popup's default start-directory reliably
+# track the triggering pane, so the path is passed explicitly as an argument:
+# #{pane_current_path} is expanded against the pane where the key was pressed
+# when tmux parses the bound command line itself, before run-shell/display-popup
+# ever run.
+
 # prefix + W  →  prompt for branch name, then create worktree + pane
 tmux bind-key "$wtree_key" \
   command-prompt -p "New worktree branch:" \
-  "run-shell -c '#{pane_current_path}' '$CURRENT_DIR/scripts/new-worktree.sh \"%%\"'"
+  "run-shell '$CURRENT_DIR/scripts/new-worktree.sh \"%%\" \"#{pane_current_path}\"'"
 
 # prefix + L  →  popup listing open worktrees for this session
 tmux bind-key "$wtree_list_key" \
-  display-popup -E -w 60% -h 40% "$CURRENT_DIR/scripts/list.sh"
+  display-popup -E -w 60% -h 40% "$CURRENT_DIR/scripts/list.sh '#{pane_current_path}'"
