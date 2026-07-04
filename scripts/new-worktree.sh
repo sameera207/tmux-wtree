@@ -41,15 +41,13 @@ fi
 
 # Create the git worktree (create branch if it doesn't exist).
 if git -C "$repo_root" show-ref --verify --quiet "refs/heads/$branch"; then
-  if ! git -C "$repo_root" worktree add "$worktree_abs" "$branch" 2>&1 \
-      | tmux display-message -; then
-    exit 1
-  fi
+  worktree_output=$(git -C "$repo_root" worktree add "$worktree_abs" "$branch" 2>&1)
 else
-  if ! git -C "$repo_root" worktree add -b "$branch" "$worktree_abs" 2>&1 \
-      | tmux display-message -; then
-    exit 1
-  fi
+  worktree_output=$(git -C "$repo_root" worktree add -b "$branch" "$worktree_abs" 2>&1)
+fi
+if [[ $? -ne 0 ]]; then
+  tmux display-message "wtree: $worktree_output"
+  exit 1
 fi
 
 # Create the pane and tag it.

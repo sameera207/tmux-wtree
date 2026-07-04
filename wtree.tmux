@@ -25,7 +25,7 @@ wtree_list_key=$(tmux show-option -gv @wtree-list-key 2>/dev/null)
 # prefix + W  →  prompt for branch name, then create worktree + pane
 tmux bind-key "$wtree_key" \
   command-prompt -p "New worktree branch:" \
-  "run-shell '$CURRENT_DIR/scripts/new-worktree.sh \"%%\"'"
+  "run-shell -c '#{pane_current_path}' '$CURRENT_DIR/scripts/new-worktree.sh \"%%\"'"
 
 # prefix + L  →  popup listing open worktrees for this session
 tmux bind-key "$wtree_list_key" \
