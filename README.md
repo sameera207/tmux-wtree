@@ -45,7 +45,7 @@ Missing `fzf` makes the list popup read-only.
 Add to `~/.tmux.conf`:
 
 ```tmux
-set -g @plugin 'yourname/tmux-wtree'
+set -g @plugin 'sameera207/tmux-wtree'
 ```
 
 Then press `prefix + I` to install.
@@ -53,7 +53,7 @@ Then press `prefix + I` to install.
 ### Manual
 
 ```bash
-git clone https://github.com/yourname/tmux-wtree ~/.tmux/plugins/tmux-wtree
+git clone https://github.com/sameera207/tmux-wtree ~/.tmux/plugins/tmux-wtree
 echo "run-shell ~/.tmux/plugins/tmux-wtree/wtree.tmux" >> ~/.tmux.conf
 tmux source ~/.tmux.conf
 ```
