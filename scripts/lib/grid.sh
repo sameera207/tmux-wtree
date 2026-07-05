@@ -50,11 +50,26 @@ wtree_create_pane() {
   echo "$new_pane"
 }
 
-# Tags a pane with its slot index and branch name.
+# Pane border label for windows containing wtree panes: tagged panes show
+# their branch name, everything else keeps tmux's normal index/title look.
+WTREE_BORDER_FORMAT='#{?@wtree_branch,⎇ #{@wtree_branch},#{?pane_active,#[reverse],}#{pane_index} "#{pane_title}"}'
+
+# Tags a pane with its slot index and branch name, and turns on the
+# branch-aware border label for the window it lives in. Scoped to that one
+# window (set-window-option, not -g) so it doesn't affect other windows.
 wtree_tag_pane() {
   local pane_id="$1" slot="$2" branch="$3"
   tmux set-option -p -t "$pane_id" @wtree_slot   "$slot"
   tmux set-option -p -t "$pane_id" @wtree_branch "$branch"
+
+  local border_enabled
+  border_enabled=$(tmux show-option -gv @wtree-border 2>/dev/null)
+  if [[ "$border_enabled" != "off" ]]; then
+    local win
+    win=$(tmux display-message -p -t "$pane_id" '#{window_id}')
+    tmux set-window-option -t "$win" pane-border-status top
+    tmux set-window-option -t "$win" pane-border-format "$WTREE_BORDER_FORMAT"
+  fi
 }
 
 # Reassigns contiguous slot numbers (0, 1, 2, …) to all tagged panes,

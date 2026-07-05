@@ -116,6 +116,7 @@ Set options in `~/.tmux.conf` before the `run-shell` / TPM line:
 set -g @wtree-key     'W'                      # keybinding for new worktree
 set -g @wtree-list-key 'L'                     # keybinding for list popup
 set -g @wtree-dir     '../#{repo}-#{branch}'   # worktree location template
+set -g @wtree-border  'on'                     # 'off' disables branch labels on pane borders
 ```
 
 ### `@wtree-dir` template variables
@@ -139,6 +140,11 @@ Manual splits (`prefix + %` / `prefix + "`) are completely independent —
 they are ignored by the placement algorithm and never disturb the grid.
 Tool-managed panes are identified by the tmux user options `@wtree_slot` and
 `@wtree_branch` set on each pane.
+
+Each worktree pane's border shows its branch name (`⎇ feature/auth`), so you
+can tell panes apart at a glance across the grid. This only turns on
+`pane-border-status` for the specific window a worktree pane lives in — other
+windows and sessions are untouched. Set `@wtree-border 'off'` to disable it.
 
 ## Repo structure
 
