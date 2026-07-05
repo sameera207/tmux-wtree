@@ -52,7 +52,7 @@ wtree_create_pane() {
 
 # Pane border label for windows containing wtree panes: tagged panes show
 # their branch name, everything else keeps tmux's normal index/title look.
-WTREE_BORDER_FORMAT='#{?@wtree_branch,⎇ #{@wtree_branch},#{?pane_active,#[reverse],}#{pane_index} "#{pane_title}"}'
+WTREE_BORDER_FORMAT='#{?@wtree_branch,[worktree] #{@wtree_branch},#{?pane_active,#[reverse],}#{pane_index} "#{pane_title}"}'
 
 # Tags a pane with its slot index and branch name, and turns on the
 # branch-aware border label for the window it lives in. Scoped to that one

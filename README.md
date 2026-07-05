@@ -141,7 +141,7 @@ they are ignored by the placement algorithm and never disturb the grid.
 Tool-managed panes are identified by the tmux user options `@wtree_slot` and
 `@wtree_branch` set on each pane.
 
-Each worktree pane's border shows its branch name (`⎇ feature/auth`), so you
+Each worktree pane's border shows its branch name (`[worktree] feature/auth`), so you
 can tell panes apart at a glance across the grid. This only turns on
 `pane-border-status` for the specific window a worktree pane lives in — other
 windows and sessions are untouched. Set `@wtree-border 'off'` to disable it.
