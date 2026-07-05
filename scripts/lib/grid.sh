@@ -26,15 +26,23 @@ wtree_pane_by_slot() {
 }
 
 # Creates a new pane for the given slot and returns its pane_id.
+# origin_pane anchors the very first split to the pane that triggered the
+# command — without it, tmux falls back to ambient "current pane"
+# resolution, which is unreliable when invoked via run-shell.
 # Does NOT switch focus to the new pane (-d flag).
 wtree_create_pane() {
   local slot="$1"
+  local origin_pane="${2:-}"
   local new_pane
 
   if (( slot % 2 == 0 )); then
     # Even slot: new full-width row at the bottom of the window.
     if (( slot == 0 )); then
-      new_pane=$(tmux split-window -fv -d -P -F '#{pane_id}')
+      if [[ -n "$origin_pane" ]]; then
+        new_pane=$(tmux split-window -fv -d -P -F '#{pane_id}' -t "$origin_pane")
+      else
+        new_pane=$(tmux split-window -fv -d -P -F '#{pane_id}')
+      fi
     else
       local parent
       parent=$(wtree_pane_by_slot $((slot - 2)))

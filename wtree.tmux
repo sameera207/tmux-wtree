@@ -29,9 +29,11 @@ wtree_list_key=$(tmux show-option -gv @wtree-list-key 2>/dev/null)
 # ever run.
 
 # prefix + W  →  prompt for branch name, then create worktree + pane
+# #{pane_id} is passed through too so the script can target the triggering
+# pane's window/client for pane creation and any conflict-resolution menu.
 tmux bind-key "$wtree_key" \
   command-prompt -p "New worktree branch:" \
-  "run-shell '$CURRENT_DIR/scripts/new-worktree.sh \"%%\" \"#{pane_current_path}\"'"
+  "run-shell '$CURRENT_DIR/scripts/new-worktree.sh \"%%\" \"#{pane_current_path}\" \"#{pane_id}\"'"
 
 # prefix + L  →  popup listing open worktrees for this session
 tmux bind-key "$wtree_list_key" \
