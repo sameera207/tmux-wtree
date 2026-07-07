@@ -79,6 +79,13 @@ Press `prefix + W`, type a branch name, and hit Enter. If the branch doesn't
 exist it is created. The new pane opens in the worktree directory without
 stealing focus from your current pane.
 
+![Creating worktrees with prefix+W](docs/assets/creating-worktrees.gif)
+
+If the branch already has a worktree, a menu offers to reuse it, remove and
+recreate it, or cancel:
+
+![Reuse-or-recreate menu when a worktree already exists](docs/assets/worktree-found.gif)
+
 ### Listing worktrees
 
 Press `prefix + L` to open a popup showing all tool-managed panes:
@@ -92,6 +99,8 @@ SLOT    BRANCH                         PANE          STATUS
 ```
 
 With `fzf` installed, selecting a row jumps directly to that pane.
+
+![Listing worktrees with prefix+L](docs/assets/list-worktrees.gif)
 
 ### Cleanup
 
